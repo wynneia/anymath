@@ -17,7 +17,9 @@ def get_user_input(prompt)
 end
 
 puts "Enter the data points as space-separated pairs of x and y values (e.g., 'x1 y1 x2 y2 ...'):"
-x_values, y_values = get_user_input("Data points: ")
+data_points = get_user_input("Data points: ")
+x_values = data_points.select.with_index { |_, index| index.even? }
+y_values = data_points.select.with_index { |_, index| index.odd? }
 
 slope, intercept = linear_regression(x_values, y_values)
 
