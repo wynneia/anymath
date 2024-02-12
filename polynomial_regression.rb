@@ -1,3 +1,5 @@
+require 'matrix'
+
 def polynomial_regression(data_points, degree)
   n = data_points.size
   x_values = data_points.map { |point| point[0] }
