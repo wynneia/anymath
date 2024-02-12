@@ -1,12 +1,12 @@
 require 'matrix'
 
 def levenberg_marquardt(x_data, y_data, initial_guess, func, jacobian, lambda: 0.01, tolerance: 1e-6, max_iterations: 100)
-  parameters = initial_guess.dup
-  residual = Vector.elements(y_data.map.with_index { |y, i| y - func.call(x_data[i], parameters) })
+  parameters = Vector.elements(initial_guess)
+  residual = Vector.elements(y_data.map.with_index { |y, i| y - func.call(x_data[i], parameters.to_a) })
 
   iteration = 0
   while iteration < max_iterations
-    jacobian_matrix = Matrix.rows(y_data.map.with_index { |_, i| jacobian.call(x_data[i], parameters) })
+    jacobian_matrix = Matrix.rows(y_data.map.with_index { |_, i| jacobian.call(x_data[i], parameters.to_a) })
     jacobian_transpose = jacobian_matrix.transpose
 
     squared_residual = residual.map { |r| r**2 }
@@ -16,13 +16,13 @@ def levenberg_marquardt(x_data, y_data, initial_guess, func, jacobian, lambda: 0
     sum_jacobian_squared_residual = jacobian_squared_residual.reduce(:+)
 
     jacobian_squared = jacobian_transpose * jacobian_matrix
-    diagonal = Matrix.diagonal(*(1 + lambda) * jacobian_squared.diagonal)
+    diagonal = Matrix.diagonal(*((1 + lambda) * jacobian_squared.diagonal.to_a))
 
     delta_parameters = (jacobian_squared + diagonal).inverse * jacobian_transpose * residual
 
-    new_parameters = parameters + delta_parameters.to_a.flatten
+    new_parameters = parameters + delta_parameters
 
-    new_residual = Vector.elements(y_data.map.with_index { |y, i| y - func.call(x_data[i], new_parameters) })
+    new_residual = Vector.elements(y_data.map.with_index { |y, i| y - func.call(x_data[i], new_parameters.to_a) })
     new_squared_residual = new_residual.map { |r| r**2 }
     new_sum_squared_residual = new_squared_residual.reduce(:+)
 
@@ -39,7 +39,7 @@ def levenberg_marquardt(x_data, y_data, initial_guess, func, jacobian, lambda: 0
     iteration += 1
   end
 
-  parameters
+  parameters.to_a
 end
 
 #example usage:
