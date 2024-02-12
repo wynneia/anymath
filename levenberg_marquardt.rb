@@ -16,7 +16,9 @@ def levenberg_marquardt(x_data, y_data, initial_guess, func, jacobian, lambda: 0
     sum_jacobian_squared_residual = jacobian_squared_residual.reduce(:+)
 
     jacobian_squared = jacobian_transpose * jacobian_matrix
-    diagonal = Matrix.diagonal(*((1 + lambda) * jacobian_squared.to_a.map(&:first)))
+    diagonal = Matrix.build(jacobian_squared.row_size, jacobian_squared.column_size) do |i, j|
+      i == j ? (1 + lambda) * jacobian_squared[i, j] : 0
+    end
 
     delta_parameters = (jacobian_squared + diagonal).inverse * jacobian_transpose * residual
 
