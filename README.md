@@ -32,6 +32,7 @@ Here are some of the algorithms and operations included in this repository:
 - Linear regression
 - Root-finding algorithms (Bisection method, Newton-Raphson method)
 - Nonlinear least squares curve fitting (Levenberg-Marquardt algorithm)
+- Gauss-Seidel method for solving systems of linear equations
 
 ## Contributing
 Contributions are welcome! If you have any improvements, bug fixes, or new algorithms you'd like to add, please feel free to open an issue or submit a pull request.
